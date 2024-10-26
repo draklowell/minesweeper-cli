@@ -127,17 +127,15 @@ def create_table(
 def disclose(
     table: list[list[int]],
     position: tuple[int, int],
-    # soft_hit: bool = False,
-    recursive_visited: list[tuple[tuple[int, int], bool]] | None = None,
+    recursive_visited: list[tuple[int, int]] | None = None,
 ) -> bool | None:
     """
     Disclose the cell at the given position.
 
     :param table: list[list[int]]
     :param position: tuple[int, int], position in the form of (x, y)
-    :param soft_hit: bool, True if to disclose only empty cell
     :param recursive_visited: list[tuple[tuple[int, int], bool]] | None, list of visited
-    positions and soft-hit values in the recursive algorithm
+    positions in the recursive algorithm
 
     :returns: bool | None, None if the position is already visible.
     False if the player hit a mine, True otherwise.
@@ -154,10 +152,6 @@ def disclose(
     if recursive_visited is None:
         recursive_visited = []
 
-    # if (position, soft_hit) in recursive_visited:
-    #     return None
-
-    # recursive_visited.append((position, soft_hit))
     if position in recursive_visited:
         return None
 
@@ -168,9 +162,6 @@ def disclose(
         return None
 
     value = get_value(table, position)
-    # if soft_hit and value:
-    #     # Non-empty cell and soft-hit or the player hit a mine
-    #     return None
 
     if value is None:
         return False
@@ -183,7 +174,6 @@ def disclose(
             neighbour_x = position[0] + shift_x
             neighbour_y = position[1] + shift_y
 
-            # Soft-hit only if cell is non-empty
             disclose(table, (neighbour_x, neighbour_y), recursive_visited)
 
     return True
@@ -234,7 +224,7 @@ the game is over!
 - start or s [difficulty]
     Starts a new game with a preset difficulty.
     Difficulty Levels:
-      easy   - 9x9 grid, 10 mines
+      easy   - 8x8 grid, 10 mines
       normal - 16x16 grid, 40 mines
       hard   - 24x24 grid, 99 mines
     Example: start easy
